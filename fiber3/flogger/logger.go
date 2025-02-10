@@ -46,9 +46,13 @@ func WithFiber(c fiber.Ctx, lg ...*zap.Logger) *zap.Logger {
 	return mlog.With(zap.String("request_id", c.GetRespHeader("X-Request-ID")))
 }
 
+// WithFiberError 打印错误日志，将Fiber的请求信息打印出来
 func WithFiberError(c fiber.Ctx, e error) {
 	if ex, ok := e.(*errorx.ErrorX); ok {
 		WithFiber(c, MyNoCaller).Error(ex.Cause().Error() + ex.StackString())
+	} else {
+		ex2 := errorx.Stacked(e).(*errorx.ErrorX)
+		WithFiber(c, MyNoCaller).Error(ex2.Cause().Error() + ex2.StackString())
 	}
-	WithFiber(c).Error(e.Error())
+	//panic(e)
 }
