@@ -56,3 +56,9 @@ func WithFiberError(c fiber.Ctx, e error) {
 	}
 	//panic(e)
 }
+
+func WithFiberIfError(c fiber.Ctx, e error) {
+	if e != nil {
+		WithFiberError(c, e)
+	}
+}
